@@ -10,6 +10,7 @@ public class DataBase {
 	
 	private Connection connection;
 	private Statement statement;
+	private ResultSet resultSet;
 	
 	private final String DB_DRIVER = "org.sqlite.JDBC";
 	private final String DB_URL = "jdbc:sqlite:" + System.getProperty("user.dir") + "\\My_cats.db";
@@ -67,7 +68,7 @@ public class DataBase {
 		boolean isDuplicate = false;
 		
 		try {
-			ResultSet resultSet = statement.executeQuery(query);
+			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				if (type.equals(resultSet.getString("type"))) {
 					isDuplicate = true;
@@ -96,6 +97,7 @@ public class DataBase {
 	public void closeAllConnections() {
 		
 		try {
+			resultSet.close();
 			statement.close();
 			connection.close();
 			System.out.println("Соединения закрыты!");
