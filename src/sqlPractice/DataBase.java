@@ -2,6 +2,7 @@ package sqlPractice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -19,6 +20,9 @@ public class DataBase {
 		
 		db.makeConnection();
 		db.CreateTable();
+		db.insertType("Абиссинская кошка");
+		db.insertType("Австралийский мист");
+		db.insertType("Американская жесткошерстная");
 		db.closeAllConnections();
 
 	}
@@ -57,6 +61,38 @@ public class DataBase {
 		
 	}
 	
+	public void insertType(String type) {
+		
+		String query = "SELECT type FROM types";
+		boolean isDuplicate = false;
+		
+		try {
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				if (type.equals(resultSet.getString("type"))) {
+					isDuplicate = true;
+					break;
+				}
+			}	
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		if (!isDuplicate) {
+			try {
+				query = "INSERT INTO 'types' ('type')" +
+						"VALUES ('" + type + "');";
+				statement.executeUpdate(query);
+				System.out.println(type + " добавлена!");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println(type + " уже существует в базе данных!");
+		}
+
+	}
+	
 	public void closeAllConnections() {
 		
 		try {
@@ -69,5 +105,4 @@ public class DataBase {
 		
 	}
 
-	
 }
