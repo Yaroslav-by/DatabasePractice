@@ -21,7 +21,9 @@ public class DataBase {
 		
 		db.makeConnection();
 		db.CreateTable();
-		db.addAllTypes();
+		//db.addAllTypes();
+		db.deleteType(58);
+		db.UpdateType(3, "Новая порода кота");
 		db.closeAllConnections();
 
 	}
@@ -67,6 +69,7 @@ public class DataBase {
 		
 		try {
 			resultSet = statement.executeQuery(query);
+			
 			while (resultSet.next()) {
 				if (type.equals(resultSet.getString("type"))) {
 					isDuplicate = true;
@@ -90,6 +93,32 @@ public class DataBase {
 			System.out.println(type + " уже существует в базе данных!");
 		}
 
+	}
+	
+	public void deleteType(int id) {
+		
+		try {
+			String query = "DELETE FROM types " + 
+					   "WHERE id = " + id + ";";
+			statement.execute(query);
+			System.out.println(id + " удален!");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void UpdateType(int id, String newType) {
+		
+		try {
+			String query = "UPDATE types " + 
+						   "SET type = '" + newType + "' " + 
+						   "WHERE id = " + id + ";";
+			statement.executeUpdate(query);
+			System.out.println("Порода кота с id = " + id + " изменена на " + newType);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void addAllTypes() {
@@ -165,7 +194,7 @@ public class DataBase {
 	public void closeAllConnections() {
 		
 		try {
-			resultSet.close();
+			//resultSet.close();
 			statement.close();
 			connection.close();
 			System.out.println("Соединения закрыты!");
