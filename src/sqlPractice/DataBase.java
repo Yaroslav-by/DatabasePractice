@@ -21,11 +21,12 @@ public class DataBase {
 		
 		db.makeConnection();
 		db.CreateTable();
+		db.CreateSecondTable();
 //		db.addAllTypes();
 //		db.deleteType(58);
 //		db.UpdateType(3, "Новая порода кота");
-//		db.getType(13);
-//		db.getTypeWhere("type LIKE '%а'");
+		db.getType(13);
+		db.getTypeWhere("type LIKE '%а'");
 		db.getAllTypes();
 		db.closeAllConnections();
 
@@ -57,11 +58,28 @@ public class DataBase {
 						   "'id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE," + 
 						   "'type' VARCHAR(100) NOT NULL);";
 			statement.execute(query);
-			System.out.println("Таблица создана!");
 		} catch (SQLException e) {
 			System.out.println("Ошибка sql или соединение закрыто!");
 			e.printStackTrace();
 		}
+		
+	}
+	
+	public void CreateSecondTable() {
+		
+		try {
+			statement = connection.createStatement();
+			String query = "CREATE TABLE if not exists 'cats' (" + 
+						   "'id' INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, " + 
+						   "'name' VARCHAR(20) NOT NULL, " + 
+						   "'type_id' INTEGER NOT NULL REFERENCES 'types' (id), " + 
+						   "'age' INTEGER NOT NULL, " + 
+						   "'weight' DOUBLE);";
+			statement.execute(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 	
