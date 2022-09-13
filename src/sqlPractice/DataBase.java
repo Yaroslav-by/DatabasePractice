@@ -25,9 +25,9 @@ public class DataBase {
 //		db.addAllTypes();
 //		db.deleteType(58);
 //		db.UpdateType(3, "Новая порода кота");
-		db.getType(13);
-		db.getTypeWhere("type LIKE '%а'");
-		db.getAllTypes();
+//		db.getType(13);
+//		db.getTypeWhere("type LIKE '%а'");
+//		db.getAllTypes();
 		db.closeAllConnections();
 
 	}
@@ -89,6 +89,7 @@ public class DataBase {
 		boolean isDuplicate = false;
 		
 		try {
+			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
 			
 			while (resultSet.next()) {
@@ -121,6 +122,7 @@ public class DataBase {
 		try {
 			String query = "DELETE FROM types " + 
 					   "WHERE id = " + id + ";";
+			statement = connection.createStatement();
 			statement.execute(query);
 			System.out.println(id + " удален!");
 		} catch (SQLException e) {
@@ -135,6 +137,7 @@ public class DataBase {
 			String query = "UPDATE types " + 
 						   "SET type = '" + newType + "' " + 
 						   "WHERE id = " + id + ";";
+			statement = connection.createStatement();
 			statement.executeUpdate(query);
 			System.out.println("Порода кота с id = " + id + " изменена на " + newType);
 		} catch (SQLException e) {
@@ -147,7 +150,8 @@ public class DataBase {
 		String query = "SELECT * FROM types;";
 		
 		try {
-			ResultSet resultSet = statement.executeQuery(query);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				if (resultSet.getInt("id") == id) {
 					System.out.println("id = " + id + ": " + resultSet.getString("type"));
@@ -165,7 +169,8 @@ public class DataBase {
 		String query = "SELECT type FROM types WHERE " + where + ";";
 		
 		try {
-			ResultSet resultSet = statement.executeQuery(query);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
 			System.out.println("По Вашему запросу нашлось:");
 			System.out.println("--------------------------");
 			while (resultSet.next()) {
@@ -183,7 +188,8 @@ public class DataBase {
 		String query = "SELECT type FROM types;";
 		
 		try {
-			ResultSet resultSet = statement.executeQuery(query);
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
 				System.out.println(resultSet.getString("type"));
 			}
