@@ -21,9 +21,12 @@ public class DataBase {
 		
 		db.makeConnection();
 		db.CreateTable();
-		//db.addAllTypes();
-		db.deleteType(58);
-		db.UpdateType(3, "Новая порода кота");
+//		db.addAllTypes();
+//		db.deleteType(58);
+//		db.UpdateType(3, "Новая порода кота");
+//		db.getType(13);
+//		db.getTypeWhere("type LIKE '%а'");
+		db.getAllTypes();
 		db.closeAllConnections();
 
 	}
@@ -119,6 +122,57 @@ public class DataBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void getType(int id) {
+		
+		String query = "SELECT * FROM types;";
+		
+		try {
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				if (resultSet.getInt("id") == id) {
+					System.out.println("id = " + id + ": " + resultSet.getString("type"));
+					break;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void getTypeWhere(String where) {
+		
+		String query = "SELECT type FROM types WHERE " + where + ";";
+		
+		try {
+			ResultSet resultSet = statement.executeQuery(query);
+			System.out.println("По Вашему запросу нашлось:");
+			System.out.println("--------------------------");
+			while (resultSet.next()) {
+				System.out.println(resultSet.getString("type"));
+			}
+			System.out.println("--------------------------");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void getAllTypes() {
+		
+		String query = "SELECT type FROM types;";
+		
+		try {
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				System.out.println(resultSet.getString("type"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	public void addAllTypes() {
