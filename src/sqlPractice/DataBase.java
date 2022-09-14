@@ -20,14 +20,9 @@ public class DataBase {
 		DataBase db = new DataBase();
 		
 		db.makeConnection();
-		db.CreateTable();
-		db.CreateSecondTable();
-//		db.addAllTypes();
-//		db.deleteType(58);
-//		db.UpdateType(3, "Новая порода кота");
-//		db.getType(13);
-//		db.getTypeWhere("type LIKE '%а'");
-//		db.getAllTypes();
+		db.insertCat("Персик", "Меконгский бобтейл", 2, 3.9);
+		db.insertCat("Барсик", "Новая порода кота №2", 6, 5.1);
+		db.insertCat("Пушок", "Новая порода кота №2", 8, 4.7);
 		db.closeAllConnections();
 
 	}
@@ -115,6 +110,46 @@ public class DataBase {
 			System.out.println(type + " уже существует в базе данных!");
 		}
 
+	}
+	
+	public void insertCat(String name, String type, int age, Double weight) {
+		
+		try {
+			statement = connection.createStatement();
+			String query = "SELECT id FROM types WHERE type = '" + type + "';";
+			resultSet = statement.executeQuery(query);
+			
+			if (resultSet.getInt("id") == 0) {
+				query = "INSERT INTO types (type) " +
+						"VALUES ('" + type + "');";
+				statement.executeUpdate(query);
+				System.out.println(type + " не существовала в БД ранее и была добавлена!");
+				
+				query = "SELECT id FROM types WHERE type = '" + type + "';";
+				resultSet = statement.executeQuery(query);
+				query = "INSERT INTO cats (name, type_id, age, weight) "
+						  + "VALUES ('" + name + "', " 
+						  + resultSet.getInt("id") + ", "
+						  + age + ", "
+						  + weight + ");";
+				statement.executeUpdate(query);
+				System.out.println("Кот с именем " + name + " добавлен в базу данных!");
+				
+			} else {
+				query = "INSERT INTO cats (name, type_id, age, weight) "
+					  + "VALUES ('" + name + "', " 
+					  + resultSet.getInt("id") + ", "
+					  + age + ", "
+					  + weight + ");";
+				statement.executeUpdate(query);
+				System.out.println("Кот с именем " + name + " добавлен в базу данных!");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 	
 	public void deleteType(int id) {
