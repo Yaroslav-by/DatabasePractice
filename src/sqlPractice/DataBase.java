@@ -22,7 +22,10 @@ public class DataBase {
 		DataBase db = new DataBase();
 		
 		db.makeConnection();
-		db.addMoreCats(5000);
+//		db.deleteCat(50);
+//		db.deleteCat("id > 100 AND id < 150");
+//		db.updateCat(79, "Персик");
+		db.updateCat("type_id = 4", "Новое имя");
 		db.closeAllConnections();
 
 
@@ -148,6 +151,59 @@ public class DataBase {
 		
 	}
 
+	public void deleteCat(int id) {
+		
+		try {
+			statement = connection.createStatement();
+			String query = "DELETE FROM cats " + 
+						   "WHERE id = " + id + ";";
+			statement.execute(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void deleteCat(String where) {
+		
+		try {
+			statement = connection.createStatement();
+			String query = "DELETE FROM cats " + 
+						   "WHERE " + where + ";";
+			statement.execute(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void updateCat(int id, String set) {
+		
+		try {
+			statement = connection.createStatement();
+			String query = "UPDATE cats " + 
+						   "SET name = '" + set + "' " +
+						   "WHERE id = " + id + ";";
+			statement.execute(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void updateCat(String where, String set) {
+		
+		try {
+			statement = connection.createStatement();
+			String query = "UPDATE cats " + 
+						   "SET name = '" + set + "' " +
+						   "WHERE " + where + ";";
+			statement.execute(query);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addMoreCats(int n) {
 		
 		Random random = new Random();
