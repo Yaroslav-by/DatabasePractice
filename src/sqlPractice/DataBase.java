@@ -2,6 +2,7 @@ package sqlPractice;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,12 +23,10 @@ public class DataBase {
 		DataBase db = new DataBase();
 		
 		db.makeConnection();
-//		db.deleteCat(50);
-//		db.deleteCat("id > 100 AND id < 150");
-//		db.updateCat(79, "Персик");
-		db.updateCat("type_id = 4", "Новое имя");
+		db.getCat(20);
+		db.getCatWhere("id < 20 AND name LIKE '%я'");
+		db.getAllCats();
 		db.closeAllConnections();
-
 
 	}
 	
@@ -202,6 +201,80 @@ public class DataBase {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void getCat(int id) {
+		
+		try {
+			String query = "SELECT * FROM cats WHERE id = " + id + ";";
+			String q = "SELECT type FROM types WHERE id IN (SELECT type_id FROM cats WHERE id = " + id + ");";
+			
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			
+			Statement st = connection.createStatement();
+			ResultSet rS = st.executeQuery(q);
+			
+			System.out.println("Имя: " + resultSet.getString("name"));
+			System.out.println("Порода: " + rS.getString("type"));
+			System.out.println("Возраст: " + resultSet.getInt("age") + " годиков");
+			System.out.println("Вес: " + resultSet.getDouble("weight") + " килограммиков");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void getCatWhere(String where) {
+		
+		String query = "SELECT * FROM cats WHERE " + where + ";";
+		
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			
+			while (resultSet.next()) {
+				String q = "SELECT type FROM types WHERE id IN (SELECT type_id FROM cats WHERE id = " + resultSet.getInt("id") + " );";
+				Statement st = connection.createStatement();
+				ResultSet rS = st.executeQuery(q);
+				
+				System.out.println("Имя: " + resultSet.getString("name"));
+				System.out.println("Порода: " + rS.getString("type"));
+				System.out.println("Возраст: " + resultSet.getInt("age") + " годиков");
+				System.out.println("Вес: " + resultSet.getDouble("weight") + " килограммиков");
+				System.out.println("-----------------------------------");
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void getAllCats() {
+		
+		String query = "SELECT * FROM cats";
+		
+		try {
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				String q = "SELECT type FROM types WHERE id IN (SELECT type_id FROM cats WHERE id = " + resultSet.getInt("id") + " );";
+				Statement st = connection.createStatement();
+				ResultSet rS = st.executeQuery(q);
+				
+				System.out.println("Имя: " + resultSet.getString("name"));
+				System.out.println("Порода: " + rS.getString("type"));
+				System.out.println("Возраст: " + resultSet.getInt("age") + " годиков");
+				System.out.println("Вес: " + resultSet.getDouble("weight") + " килограммиков");
+				System.out.println("-----------------------------------");
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void addMoreCats(int n) {
